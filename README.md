@@ -23,7 +23,11 @@
 
 ---
 
+# Startup-Idea-Validator
 
+## Directory Structure
+
+```bash
 Startup-Idea-Validator/
 ├── backend/
 │   ├── config/
@@ -73,12 +77,3 @@ Startup-Idea-Validator/
 ├── package.json
 └── package-lock.json
 
-
-## 🛠️ **Running the Project**
-
-### Backend Setup
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Sridharn97/Startup-Valdiator.git
-   cd  Startup-Valdiator
-   
