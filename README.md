@@ -107,5 +107,6 @@
 ### Backend Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/startup-idea-validator.git
-   cd startup-idea-validator
+   git clone https://github.com/Sridharn97/Startup-Valdiator.git
+   cd  Startup-Valdiator
+   
