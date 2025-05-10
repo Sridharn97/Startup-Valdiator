@@ -22,7 +22,8 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
     title: '',
     description: '',
     category: '',
-    techStack: []
+    techStack: [],
+    isPrivate: false
   });
   const [techInput, setTechInput] = useState('');
   const [errors, setErrors] = useState({});
@@ -35,16 +36,17 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
         title: idea.title || '',
         description: idea.description || '',
         category: idea.category || '',
-        techStack: idea.techStack || []
+        techStack: idea.techStack || [],
+        isPrivate: idea.isPrivate || false
       });
     }
   }, [idea]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     });
     
     // Clear error for this field when user starts typing
@@ -236,6 +238,21 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
             ))}
           </div>
         </div>
+      </div>
+
+      <div className="mb-6">
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            name="isPrivate"
+            checked={formData.isPrivate}
+            onChange={handleChange}
+            className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          />
+          <span className="ml-2 text-sm text-gray-600">
+            Make this idea private (only visible to you until approved)
+          </span>
+        </label>
       </div>
 
       <div className="flex justify-end gap-3">

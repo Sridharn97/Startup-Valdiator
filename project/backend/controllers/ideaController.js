@@ -20,6 +20,16 @@ export const getIdeas = async (req, res) => {
       query.status = 'Approved';
     }
 
+    // Only show public ideas or ideas owned by the requesting user
+    if (req.user) {
+      query.$or = [
+        { isPrivate: false },
+        { user: req.user._id }
+      ];
+    } else {
+      query.isPrivate = false;
+    }
+
     const ideas = await Idea.find(query)
       .populate('user', 'username')
       .sort({ createdAt: -1 });
@@ -39,11 +49,16 @@ export const getIdeaById = async (req, res) => {
     const idea = await Idea.findById(req.params.id)
       .populate('user', 'username');
 
-    if (idea) {
-      res.json(idea);
-    } else {
-      res.status(404).json({ message: 'Idea not found' });
+    if (!idea) {
+      return res.status(404).json({ message: 'Idea not found' });
     }
+
+    // Check if idea is private and user is not the owner
+    if (idea.isPrivate && (!req.user || idea.user._id.toString() !== req.user._id.toString())) {
+      return res.status(403).json({ message: 'This idea is private' });
+    }
+
+    res.json(idea);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -55,13 +70,14 @@ export const getIdeaById = async (req, res) => {
 // @access  Private
 export const createIdea = async (req, res) => {
   try {
-    const { title, description, category, techStack } = req.body;
+    const { title, description, category, techStack, isPrivate } = req.body;
 
     const idea = await Idea.create({
       title,
       description,
       category,
       techStack,
+      isPrivate: isPrivate || false,
       user: req.user._id,
       status: 'Pending'
     });
@@ -78,7 +94,7 @@ export const createIdea = async (req, res) => {
 // @access  Private
 export const updateIdea = async (req, res) => {
   try {
-    const { title, description, category, techStack } = req.body;
+    const { title, description, category, techStack, isPrivate } = req.body;
     const idea = await Idea.findById(req.params.id);
 
     if (!idea) {
@@ -97,6 +113,7 @@ export const updateIdea = async (req, res) => {
         description: description || idea.description,
         category: category || idea.category,
         techStack: techStack || idea.techStack,
+        isPrivate: isPrivate !== undefined ? isPrivate : idea.isPrivate,
         status: 'Pending' // Reset to pending after edit
       },
       { new: true }
@@ -149,6 +166,11 @@ export const voteIdea = async (req, res) => {
 
     if (!idea) {
       return res.status(404).json({ message: 'Idea not found' });
+    }
+
+    // Check if idea is private and user is not the owner
+    if (idea.isPrivate && idea.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Cannot vote on private ideas' });
     }
 
     // Check if user has already voted
