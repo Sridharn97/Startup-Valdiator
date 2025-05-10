@@ -22,10 +22,6 @@ const IdeaSchema = new mongoose.Schema({
     type: [String],
     required: [true, 'Tech stack is required']
   },
-  isPrivate: {
-    type: Boolean,
-    default: false
-  },
   votes: {
     up: {
       type: Number,
