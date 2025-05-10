@@ -67,7 +67,6 @@ const CommentBox = ({ ideaId }) => {
     }
   };
 
-  // Format date
   const formatDate = (dateString) => {
     const options = { 
       year: 'numeric', 
@@ -80,63 +79,82 @@ const CommentBox = ({ ideaId }) => {
   };
 
   return (
-    <div className="mt-8">
-      <h3 className="text-xl font-semibold mb-4">Comments</h3>
+    <div className="mt-10">
+      <h3 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Discussion</h3>
       
       {isAuthenticated ? (
-        <form onSubmit={handleSubmitComment} className="mb-6">
-          <div className="flex items-start space-x-2">
+        <form onSubmit={handleSubmitComment} className="mb-8">
+          <div className="flex items-start gap-3">
             <div className="flex-grow">
               <textarea
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                placeholder="Add a comment..."
-                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                rows="2"
+                placeholder="Share your thoughts..."
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all resize-none"
+                rows="3"
                 disabled={loading}
               ></textarea>
+              <p className="text-xs text-gray-500 mt-1">Markdown is supported</p>
             </div>
             <button
               type="submit"
               disabled={loading || !commentText.trim()}
-              className={`mt-1 p-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                (loading || !commentText.trim()) ? 'opacity-50 cursor-not-allowed' : ''
+              className={`mt-1 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${
+                (loading || !commentText.trim()) ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-md'
               }`}
+              aria-label="Post comment"
             >
               <Send className="h-5 w-5" />
             </button>
           </div>
         </form>
       ) : (
-        <div className="bg-blue-50 p-4 rounded-md mb-6">
-          <p className="text-blue-700">
-            <a href="/login" className="font-semibold underline">Login</a> to add your comment.
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl mb-8 border border-blue-100">
+          <p className="text-blue-800 flex items-center gap-1">
+            <span>💬</span>
+            <span>
+              <a href="/login" className="font-semibold underline hover:text-blue-600 transition-colors">Sign in</a> to join the conversation
+            </span>
           </p>
         </div>
       )}
 
       {loading && comments.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">Loading comments...</div>
+        <div className="flex justify-center py-10">
+          <div className="animate-pulse flex flex-col items-center gap-2">
+            <div className="h-3 w-24 bg-gray-200 rounded-full"></div>
+            <div className="h-3 w-32 bg-gray-200 rounded-full"></div>
+          </div>
+        </div>
       ) : comments.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">No comments yet. Be the first to comment!</div>
+        <div className="text-center py-10">
+          <div className="text-gray-400 flex flex-col items-center">
+            <span className="text-4xl mb-2">💬</span>
+            <p className="text-gray-500">No comments yet</p>
+            <p className="text-sm text-gray-400">Start the discussion!</p>
+          </div>
+        </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {comments.map(comment => (
-            <div key={comment._id} className="bg-gray-50 p-4 rounded-md">
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className="flex items-center">
-                    <span className="font-medium text-gray-900">{comment.user?.username || 'Anonymous'}</span>
-                    <span className="mx-2 text-gray-300">•</span>
-                    <span className="text-sm text-gray-500">{formatDate(comment.createdAt)}</span>
+            <div key={comment._id} className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <div className="flex items-center flex-wrap gap-x-2 gap-y-1">
+                    <span className="font-semibold text-gray-900">{comment.user?.username || 'Anonymous'}</span>
+                    <span className="text-xs text-gray-400">•</span>
+                    <span className="text-xs text-gray-500">{formatDate(comment.createdAt)}</span>
                   </div>
-                  <p className="mt-1 text-gray-700">{comment.content}</p>
+                  <div className="prose prose-sm max-w-none mt-2 text-gray-700">
+                    {comment.content}
+                  </div>
                 </div>
                 
                 {(isAuthenticated && (user?._id === comment.user?._id || isAdmin)) && (
                   <button
                     onClick={() => handleDeleteComment(comment._id)}
-                    className="text-gray-400 hover:text-red-600 transition-colors"
+                    className="text-gray-300 hover:text-red-500 transition-colors p-1 -mt-1 -mr-1"
+                    aria-label="Delete comment"
                   >
                     <Trash className="h-4 w-4" />
                   </button>
