@@ -6,6 +6,7 @@
   "scripts": {
     "dev:frontend": "vite",
     "build:frontend": "vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "dev:backend": "node backend/server.js",
