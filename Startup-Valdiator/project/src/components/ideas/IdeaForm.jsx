@@ -49,7 +49,7 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     });
-    
+
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -111,13 +111,16 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
 
     setLoading(true);
     try {
+      const BASE_URL = "https://backend-2-hq3s.onrender.com"; // ✅ Your deployed backend URL
+
       if (idea) {
-        await axios.put(`/api/ideas/${idea._id}`, formData);
+        await axios.put(`${BASE_URL}/api/ideas/${idea._id}`, formData);
         toast.success('Idea updated successfully!');
       } else {
-        await axios.post('/api/ideas', formData);
+        await axios.post(`${BASE_URL}/api/ideas`, formData);
         toast.success('Idea submitted successfully!');
       }
+
       onSuccess();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to save idea');
@@ -144,6 +147,7 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
         </div>
       </div>
 
+      {/* Title */}
       <div className="mb-6">
         <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
           Title *
@@ -160,6 +164,7 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
         {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
       </div>
 
+      {/* Description */}
       <div className="mb-6">
         <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
           Description *
@@ -176,7 +181,7 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
         {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
       </div>
 
-
+      {/* Category */}
       <div className="mb-6">
         <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
           Category *
@@ -196,6 +201,7 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
         {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
       </div>
 
+      {/* Tech Stack */}
       <div className="mb-6">
         <label htmlFor="techStack" className="block text-sm font-medium text-gray-700 mb-1">
           Tech Stack *
@@ -238,24 +244,9 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
           </button>
         </div>
         {errors.techStack && <p className="mt-1 text-sm text-red-600">{errors.techStack}</p>}
-        
-        <div className="mt-3">
-          <p className="text-sm text-gray-600 mb-2">Suggested technologies:</p>
-          <div className="flex flex-wrap gap-2">
-            {TECH_OPTIONS.slice(0, 15).map(tech => (
-              <button
-                key={tech}
-                type="button"
-                onClick={() => handleAddTech(tech)}
-                className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-1 px-2 rounded-md transition"
-              >
-                {tech}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
 
+      {/* Terms */}
       <div className="mb-6">
         <label className="flex items-start">
           <input
@@ -263,21 +254,22 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
             name="agreedToTerms"
             checked={formData.agreedToTerms}
             onChange={handleChange}
-            className="mt-1 rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1 rounded border-gray-300 text-blue-600 shadow-sm"
           />
           <span className="ml-2 text-sm text-gray-600">
-            I agree to the terms of use and confirm that this is my original idea. I understand that any form of idea theft or misuse will result in account suspension.
+            I agree to the terms of use and confirm that this is my original idea.
           </span>
         </label>
         {errors.agreedToTerms && <p className="mt-1 text-sm text-red-600">{errors.agreedToTerms}</p>}
       </div>
 
+      {/* Buttons */}
       <div className="flex justify-end gap-3">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 bg-white hover:bg-gray-50"
           >
             Cancel
           </button>
@@ -285,7 +277,7 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
         <button
           type="submit"
           disabled={loading}
-          className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+          className={`px-4 py-2 rounded-md text-sm text-white bg-blue-600 hover:bg-blue-700 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
         >
           {loading ? 'Saving...' : idea ? 'Update Idea' : 'Submit Idea'}
         </button>

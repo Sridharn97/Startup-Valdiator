@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ThumbsUp, ThumbsDown, MessageSquare, Edit, Trash } from 'lucide-react';
-
-
+import axios from 'axios'; // ✅ Add this import
 import AuthContext from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 
@@ -10,6 +9,9 @@ const IdeaCard = ({ idea, onVote, onDelete, showActions = true }) => {
   const { isAuthenticated, user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [activeVote, setActiveVote] = useState(null);
+
+  // ✅ Add your Render backend base URL
+  const BASE_URL = "https://backend-2-hq3s.onrender.com";
 
   const handleVote = async (voteType) => {
     if (!isAuthenticated) {
@@ -20,7 +22,8 @@ const IdeaCard = ({ idea, onVote, onDelete, showActions = true }) => {
     setLoading(true);
     setActiveVote(voteType);
     try {
-      const response = await axios.post(`/api/ideas/${idea._id}/vote`, { voteType });
+      // ✅ Full URL added here
+      const response = await axios.post(`${BASE_URL}/api/ideas/${idea._id}/vote`, { voteType });
       onVote(idea._id, response.data.votes);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to vote');
@@ -33,7 +36,8 @@ const IdeaCard = ({ idea, onVote, onDelete, showActions = true }) => {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this idea?')) {
       try {
-        await axios.delete(`/api/ideas/${idea._id}`);
+        // ✅ Full URL added here
+        await axios.delete(`${BASE_URL}/api/ideas/${idea._id}`);
         onDelete(idea._id);
         toast.success('Idea deleted successfully');
       } catch (error) {
