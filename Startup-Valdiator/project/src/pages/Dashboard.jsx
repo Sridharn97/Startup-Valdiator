@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PlusCircle, Lightbulb, Edit2, Trash2, ChevronRight, Loader, CheckCircle, XCircle, Clock } from 'lucide-react';
-import axios from '../axiosConfig';
-
+import axios from 'axios';
 import toast from 'react-hot-toast';
 import IdeaForm from '../components/ideas/IdeaForm';
 import IdeaCard from '../components/ideas/IdeaCard';
@@ -37,10 +36,11 @@ const Dashboard = () => {
     }
   }, [window.location.pathname, ideas]);
 
+  // ✅ Fetch all ideas of the logged-in user
   const fetchUserIdeas = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/ideas/user/ideas');
+      const response = await axios.get('https://backend-2-hq3s.onrender.com/api/ideas/user/ideas');
       setIdeas(response.data);
     } catch (error) {
       console.error('Error fetching ideas:', error);
@@ -50,9 +50,10 @@ const Dashboard = () => {
     }
   };
 
+  // ✅ Fetch specific idea for editing
   const fetchIdeaToEdit = async (ideaId) => {
     try {
-      const response = await axios.get(`/api/ideas/${ideaId}`);
+      const response = await axios.get(`https://backend-2-hq3s.onrender.com/api/ideas/${ideaId}`);
       if (response.data.user._id === user._id) {
         setCurrentIdea(response.data);
         setEditing(true);
@@ -101,12 +102,13 @@ const Dashboard = () => {
     }
   };
 
+  // ✅ Delete idea
   const handleDeleteIdea = async (ideaId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this idea?');
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`/api/ideas/${ideaId}`);
+      await axios.delete(`https://backend-2-hq3s.onrender.com/api/ideas/${ideaId}`);
       setIdeas(ideas.filter(idea => idea._id !== ideaId));
       toast.success('Idea deleted successfully');
     } catch (error) {

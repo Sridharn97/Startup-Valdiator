@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; 
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ThumbsUp, ThumbsDown, Edit, Trash, AlertCircle } from 'lucide-react';
-import axios from '../axiosConfig';
-
+import axios from 'axios';
 import toast from 'react-hot-toast';
 import CommentBox from '../components/comments/CommentBox';
 import AuthContext from '../context/AuthContext';
+
+const BASE_URL = "https://backend-2-hq3s.onrender.com";
 
 const IdeaDetails = () => {
   const { id } = useParams();
@@ -19,10 +20,11 @@ const IdeaDetails = () => {
     fetchIdea();
   }, [id]);
 
+  // ✅ Updated to use backend URL
   const fetchIdea = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/ideas/${id}`);
+      const response = await axios.get(`${BASE_URL}/api/ideas/${id}`);
       setIdea(response.data);
     } catch (error) {
       console.error('Error fetching idea:', error);
@@ -33,6 +35,7 @@ const IdeaDetails = () => {
     }
   };
 
+  // ✅ Updated to use backend URL
   const handleVote = async (voteType) => {
     if (!isAuthenticated) {
       toast.error('Please login to vote on ideas');
@@ -41,7 +44,7 @@ const IdeaDetails = () => {
 
     setVoteLoading(true);
     try {
-      const response = await axios.post(`/api/ideas/${id}/vote`, { voteType });
+      const response = await axios.post(`${BASE_URL}/api/ideas/${id}/vote`, { voteType });
       setIdea(prev => ({
         ...prev,
         votes: response.data.votes
@@ -54,10 +57,13 @@ const IdeaDetails = () => {
     }
   };
 
+  // ✅ Updated to use backend URL
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this idea?')) {
       try {
-        const url = isAdmin ? `/api/admin/ideas/${id}` : `/api/ideas/${id}`;
+        const url = isAdmin
+          ? `${BASE_URL}/api/admin/ideas/${id}`
+          : `${BASE_URL}/api/ideas/${id}`;
         await axios.delete(url);
         toast.success('Idea deleted successfully');
         navigate('/');
@@ -67,11 +73,12 @@ const IdeaDetails = () => {
     }
   };
 
+  // ✅ Updated to use backend URL
   const handleStatusChange = async (status) => {
     if (!isAdmin) return;
 
     try {
-      await axios.put(`/api/admin/ideas/${id}/status`, { status });
+      await axios.put(`${BASE_URL}/api/admin/ideas/${id}/status`, { status });
       setIdea(prev => ({
         ...prev,
         status
@@ -94,7 +101,9 @@ const IdeaDetails = () => {
     return (
       <div className="text-center py-16">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Idea Not Found</h2>
-        <p className="text-gray-600 mb-4">The idea you're looking for doesn't exist or has been removed.</p>
+        <p className="text-gray-600 mb-4">
+          The idea you're looking for doesn't exist or has been removed.
+        </p>
         <Link to="/" className="text-blue-600 hover:underline flex items-center justify-center">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Home
@@ -109,7 +118,7 @@ const IdeaDetails = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Generate badge color based on status
+  // Status color
   const getStatusColor = (status) => {
     switch (status) {
       case 'Approved':
@@ -136,12 +145,10 @@ const IdeaDetails = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{idea.title}</h1>
             
             <div className="flex items-center space-x-2">
-              {/* Status Badge */}
               <span className={`text-sm font-semibold px-3 py-1 rounded-full border ${getStatusColor(idea.status)}`}>
                 {idea.status}
               </span>
               
-              {/* Admin Status Controls */}
               {isAdmin && (
                 <div className="flex space-x-1">
                   <button
@@ -276,6 +283,7 @@ const IdeaDetails = () => {
         </div>
       </div>
 
+      {/* ✅ Comment Section */}
       <CommentBox ideaId={id} />
     </div>
   );

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, PlusCircle } from 'lucide-react';
-import axios from '../axiosConfig';
-
+import axios from 'axios';
 import IdeaCard from '../components/ideas/IdeaCard';
 import AuthContext from '../context/AuthContext';
 
@@ -25,6 +24,7 @@ const Home = () => {
     }
   }, [selectedCategory, isAuthenticated]);
 
+  // ✅ Updated: Fetch ideas from Render backend
   const fetchIdeas = async () => {
     try {
       setLoading(true);
@@ -33,8 +33,12 @@ const Home = () => {
         params.category = selectedCategory;
       }
       params.status = 'Approved';
-      
-      const response = await axios.get('/api/ideas', { params });
+
+      // 👇 Added your backend link
+      const response = await axios.get(
+        'https://backend-2-hq3s.onrender.com/api/ideas',
+        { params }
+      );
       setIdeas(response.data);
     } catch (error) {
       console.error('Error fetching ideas:', error);
