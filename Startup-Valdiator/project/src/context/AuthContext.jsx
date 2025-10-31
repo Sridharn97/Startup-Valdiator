@@ -3,6 +3,9 @@ import axios from 'axios';
 
 export const AuthContext = createContext();
 
+// ✅ Set the base URL for all Axios requests
+axios.defaults.baseURL = 'https://backend-2-hq3s.onrender.com'; 
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -66,7 +69,6 @@ export const AuthProvider = ({ children }) => {
         delete axios.defaults.headers.common['Authorization'];
       }
     };
-
     setAuthToken();
   }, [user]);
 

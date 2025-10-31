@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ThumbsUp, ThumbsDown, MessageSquare, Edit, Trash } from 'lucide-react';
-import axios from 'axios';
+
+
 import AuthContext from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 

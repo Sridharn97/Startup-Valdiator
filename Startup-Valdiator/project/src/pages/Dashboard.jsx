@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PlusCircle, Lightbulb, Edit2, Trash2, ChevronRight, Loader, CheckCircle, XCircle, Clock } from 'lucide-react';
-import axios from 'axios';
+import axios from '../axiosConfig';
+
 import toast from 'react-hot-toast';
 import IdeaForm from '../components/ideas/IdeaForm';
 import IdeaCard from '../components/ideas/IdeaCard';

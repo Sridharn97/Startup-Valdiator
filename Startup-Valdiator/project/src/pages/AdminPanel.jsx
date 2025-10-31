@@ -4,6 +4,9 @@ import { Filter, Eye, Check, X, AlertCircle, Trash2, Search, Loader2 } from 'luc
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+// ✅ Set backend base URL
+axios.defaults.baseURL = 'https://backend-2-hq3s.onrender.com';
+
 const AdminPanel = () => {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,13 +22,10 @@ const AdminPanel = () => {
     try {
       setLoading(true);
       const params = {};
-      if (statusFilter !== 'All') {
-        params.status = statusFilter;
-      }
-      if (searchQuery) {
-        params.search = searchQuery;
-      }
-      
+      if (statusFilter !== 'All') params.status = statusFilter;
+      if (searchQuery) params.search = searchQuery;
+
+      // ✅ API call now uses full backend URL automatically
       const response = await axios.get('/api/admin/ideas', { params });
       setIdeas(response.data);
     } catch (error) {
@@ -40,13 +40,13 @@ const AdminPanel = () => {
     try {
       setIsProcessing(true);
       await axios.put(`/api/admin/ideas/${ideaId}/status`, { status });
-      
-      setIdeas(ideas.map(idea => 
-        idea._id === ideaId 
-          ? { ...idea, status } 
-          : idea
-      ));
-      
+
+      setIdeas((ideas) =>
+        ideas.map((idea) =>
+          idea._id === ideaId ? { ...idea, status } : idea
+        )
+      );
+
       toast.success(`Idea ${status.toLowerCase()} successfully`, {
         icon: status === 'Approved' ? '✅' : '❌'
       });
@@ -62,10 +62,8 @@ const AdminPanel = () => {
       try {
         setIsProcessing(true);
         await axios.delete(`/api/admin/ideas/${ideaId}`);
-        setIdeas(ideas.filter(idea => idea._id !== ideaId));
-        toast.success('Idea deleted successfully', {
-          icon: '🗑️'
-        });
+        setIdeas((ideas) => ideas.filter((idea) => idea._id !== ideaId));
+        toast.success('Idea deleted successfully', { icon: '🗑️' });
       } catch (error) {
         toast.error(error.response?.data?.message || 'Failed to delete idea');
       } finally {
@@ -80,14 +78,13 @@ const AdminPanel = () => {
   };
 
   const getStatusColor = (status) => {
-    switch(status) {
+    switch (status) {
       case 'Approved': return 'bg-green-50 text-green-700 border-green-200';
       case 'Rejected': return 'bg-red-50 text-red-700 border-red-200';
       case 'Pending': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
       default: return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">

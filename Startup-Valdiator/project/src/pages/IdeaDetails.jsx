@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ThumbsUp, ThumbsDown, Edit, Trash, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import axios from '../axiosConfig';
+
 import toast from 'react-hot-toast';
 import CommentBox from '../components/comments/CommentBox';
 import AuthContext from '../context/AuthContext';

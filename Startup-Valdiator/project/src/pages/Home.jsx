@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, PlusCircle } from 'lucide-react';
-import axios from 'axios';
+import axios from '../axiosConfig';
+
 import IdeaCard from '../components/ideas/IdeaCard';
 import AuthContext from '../context/AuthContext';
 
