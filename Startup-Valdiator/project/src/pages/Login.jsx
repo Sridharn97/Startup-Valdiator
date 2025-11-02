@@ -57,7 +57,7 @@ const Login = () => {
 
     setIsLoading(true);
     try {
-      await login(formData);
+      const userData = await login(formData);
       toast.success('Login successful! Redirecting...', {
         icon: '👋',
         style: {
@@ -66,7 +66,12 @@ const Login = () => {
           color: '#fff',
         },
       });
-      navigate('/dashboard');
+      // Redirect based on user role
+      if (userData?.role === 'admin') {
+        navigate('/manage-ideas');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Login failed';
       toast.error(errorMessage, {

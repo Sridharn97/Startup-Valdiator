@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import axios from '../../axiosConfig';
 import { Send, Trash } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AuthContext from '../../context/AuthContext';
@@ -10,9 +10,6 @@ const CommentBox = ({ ideaId }) => {
   const [loading, setLoading] = useState(false);
   const { user, isAuthenticated, isAdmin } = useContext(AuthContext);
 
-  // ✅ Add your backend base URL
-  const BASE_URL = "https://backend-2-hq3s.onrender.com";
-
   useEffect(() => {
     fetchComments();
   }, [ideaId]);
@@ -20,7 +17,7 @@ const CommentBox = ({ ideaId }) => {
   const fetchComments = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${BASE_URL}/api/comments/${ideaId}`);
+      const response = await axios.get(`/api/comments/${ideaId}`);
       setComments(response.data);
     } catch (error) {
       console.error('Error fetching comments:', error);
@@ -36,7 +33,7 @@ const CommentBox = ({ ideaId }) => {
 
     try {
       setLoading(true);
-      const response = await axios.post(`${BASE_URL}/api/comments/${ideaId}`, {
+      const response = await axios.post(`/api/comments/${ideaId}`, {
         content: commentText
       });
       setComments(prevComments => [response.data, ...prevComments]);
@@ -56,8 +53,8 @@ const CommentBox = ({ ideaId }) => {
     try {
       setLoading(true);
       const url = isAdmin 
-        ? `${BASE_URL}/api/admin/comments/${commentId}`
-        : `${BASE_URL}/api/comments/${commentId}`;
+        ? `/api/admin/comments/${commentId}`
+        : `/api/comments/${commentId}`;
       
       await axios.delete(url);
       setComments(prevComments => prevComments.filter(c => c._id !== commentId));

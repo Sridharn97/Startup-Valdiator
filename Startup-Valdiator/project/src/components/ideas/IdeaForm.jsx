@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import axios from 'axios';
+import axios from '../../axiosConfig';
 import toast from 'react-hot-toast';
 
 const CATEGORIES = [
@@ -111,13 +111,11 @@ const IdeaForm = ({ idea = null, onSuccess, onCancel }) => {
 
     setLoading(true);
     try {
-      const BASE_URL = "https://backend-2-hq3s.onrender.com"; // ✅ Your deployed backend URL
-
       if (idea) {
-        await axios.put(`${BASE_URL}/api/ideas/${idea._id}`, formData);
+        await axios.put(`/api/ideas/${idea._id}`, formData);
         toast.success('Idea updated successfully!');
       } else {
-        await axios.post(`${BASE_URL}/api/ideas`, formData);
+        await axios.post('/api/ideas', formData);
         toast.success('Idea submitted successfully!');
       }
 

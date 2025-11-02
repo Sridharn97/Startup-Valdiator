@@ -29,11 +29,11 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             {isAdmin && (
               <Link
-                to="/"
+                to="/manage-ideas"
                 className="block px-3 py-2 hover:bg-blue-700 rounded-md"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Home
+                Manage Ideas
               </Link>
             )}
 
@@ -103,13 +103,15 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden pb-4 space-y-3">
-            <Link
-              to="/"
-              className="block px-3 py-2 hover:bg-blue-700 rounded-md"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </Link>
+            {isAdmin && (
+              <Link
+                to="/manage-ideas"
+                className="block px-3 py-2 hover:bg-blue-700 rounded-md"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Manage Ideas
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <>

@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'; 
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ThumbsUp, ThumbsDown, Edit, Trash, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import axios from '../axiosConfig';
 import toast from 'react-hot-toast';
 import CommentBox from '../components/comments/CommentBox';
 import AuthContext from '../context/AuthContext';
-
-const BASE_URL = "https://backend-2-hq3s.onrender.com";
 
 const IdeaDetails = () => {
   const { id } = useParams();
@@ -20,11 +18,11 @@ const IdeaDetails = () => {
     fetchIdea();
   }, [id]);
 
-  // ✅ Updated to use backend URL
+  // ✅ Fetch idea - uses configured axios with auth headers
   const fetchIdea = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${BASE_URL}/api/ideas/${id}`);
+      const response = await axios.get(`/api/ideas/${id}`);
       setIdea(response.data);
     } catch (error) {
       console.error('Error fetching idea:', error);
@@ -35,7 +33,7 @@ const IdeaDetails = () => {
     }
   };
 
-  // ✅ Updated to use backend URL
+  // ✅ Handle vote - uses configured axios with auth headers
   const handleVote = async (voteType) => {
     if (!isAuthenticated) {
       toast.error('Please login to vote on ideas');
@@ -44,7 +42,7 @@ const IdeaDetails = () => {
 
     setVoteLoading(true);
     try {
-      const response = await axios.post(`${BASE_URL}/api/ideas/${id}/vote`, { voteType });
+      const response = await axios.post(`/api/ideas/${id}/vote`, { voteType });
       setIdea(prev => ({
         ...prev,
         votes: response.data.votes
@@ -57,13 +55,13 @@ const IdeaDetails = () => {
     }
   };
 
-  // ✅ Updated to use backend URL
+  // ✅ Handle delete - uses configured axios with auth headers
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this idea?')) {
       try {
         const url = isAdmin
-          ? `${BASE_URL}/api/admin/ideas/${id}`
-          : `${BASE_URL}/api/ideas/${id}`;
+          ? `/api/admin/ideas/${id}`
+          : `/api/ideas/${id}`;
         await axios.delete(url);
         toast.success('Idea deleted successfully');
         navigate('/');
@@ -73,12 +71,12 @@ const IdeaDetails = () => {
     }
   };
 
-  // ✅ Updated to use backend URL
+  // ✅ Handle status change - uses configured axios with auth headers
   const handleStatusChange = async (status) => {
     if (!isAdmin) return;
 
     try {
-      await axios.put(`${BASE_URL}/api/admin/ideas/${id}/status`, { status });
+      await axios.put(`/api/admin/ideas/${id}/status`, { status });
       setIdea(prev => ({
         ...prev,
         status

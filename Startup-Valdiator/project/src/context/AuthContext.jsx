@@ -1,10 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosConfig';
 
-export const AuthContext = createContext();
-
-// ✅ Set the base URL for all Axios requests
-axios.defaults.baseURL = 'https://backend-2-hq3s.onrender.com'; 
+export const AuthContext = createContext(); 
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
