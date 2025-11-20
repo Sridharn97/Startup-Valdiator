@@ -21,7 +21,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center space-x-2">
             <Lightbulb className="h-6 w-6 text-yellow-300 group-hover:rotate-12 transition-transform duration-300" />
             <span className="font-bold text-xl bg-gradient-to-r from-yellow-300 to-white bg-clip-text text-transparent">
-              ProtoValidate
+              ProjectInsight
             </span>
           </Link>
 
