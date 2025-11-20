@@ -1,7 +1,7 @@
-# 🚀 **Startup Idea Validator** - Full-Stack MERN Application
+# 🚀 **Project Idea Validator** - Full-Stack MERN Application
 
 ## 📝 **Project Overview**
-**Startup Idea Validator** is a platform where users can submit, view, update, and delete startup ideas. Each idea includes details such as title, description, category, tech stack, votes (upvotes/downvotes), comments, and status (Pending, Approved, Rejected). Users can interact with other users by voting and commenting on startup ideas. Admins have the ability to moderate ideas and comments.
+**Project Idea Validator** is a platform where users can submit, view, update, and delete startup ideas. Each idea includes details such as title, description, category, tech stack, comments, and status (Pending, Approved, Rejected). Users can interact with other users by voting and commenting on startup ideas. Admins have the ability to moderate ideas and comments.
 
 ### 🔥 **Features:**
 - **User Authentication** 🔐: JWT-based authentication for user login and registration.
